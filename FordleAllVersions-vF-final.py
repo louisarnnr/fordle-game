@@ -188,7 +188,8 @@ def advanced():
     def update_df_round2():
         guess_df = pd.read_csv('guesses.csv', index_col='Try', na_filter=False)
         guess_df.iloc[[st.session_state.counter],[0]] = st.session_state.guess1.upper()
-        guess_df.iloc[[st.session_state.counter],[1]] = st.session_state.guess2.upper()
+        if len(st.session_state.stock_to_be_guessed) > 1:
+            guess_df.iloc[[st.session_state.counter],[1]] = st.session_state.guess2.upper()
         if len(st.session_state.stock_to_be_guessed) > 2:
             guess_df.iloc[[st.session_state.counter],[2]] = st.session_state.guess3.upper()
         if len(st.session_state.stock_to_be_guessed) > 3:
@@ -290,9 +291,12 @@ def advanced():
                 
     # Creates an empty dataframe in which guesses can be displayed later
     tries = ['1st', '2nd', '3rd', '4th', '5th']  
-
+        ###new
+    if len(st.session_state.stock_to_be_guessed) == 1: 
+        guess_df=pd.DataFrame({'Try': tries,'Letter 1':['','','','','']})
+        ####new
     if len(st.session_state.stock_to_be_guessed) == 2: 
-        guess_df=pd.DataFrame({'Try': tries,'Letter 1':['','','','',''], 'Letter 2':['','','','','']})
+        guess_df=pd.DataFrame({'Try': tries,'Letter 1'f:['','','','',''], 'Letter 2':['','','','','']})
     if len(st.session_state.stock_to_be_guessed) == 3: 
         guess_df=pd.DataFrame({'Try': tries,'Letter 1':['','','','',''], 'Letter 2':['','','','',''], 'Letter 3':['','','','','']})
     if len(st.session_state.stock_to_be_guessed) == 4: 
