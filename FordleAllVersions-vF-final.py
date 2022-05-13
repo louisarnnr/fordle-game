@@ -43,8 +43,7 @@ def beginner():
     # initialization of the game. Displays the graph to be guessed.
     def new_game():
         st.title('Fordle - The Wordle for Finance Nerds')
-        st.markdown('Which stock is being displayed here? It is quoted within the S&P 500')
-        st.write(f'**Here is a hint:** The stock is in the _{industry}_ industry and its headquarters are located in _{headquarters}_. Try again!')
+        st.markdown('Which stock is being displayed here?')
         plot()
 
     # display hints about stock to player. This loop is the essence of the game and decides on victories or losses. 
@@ -71,7 +70,7 @@ def beginner():
             industry = df.loc[st.session_state.stock_to_be_guessed, 'GICS Sector']
             headquarters = df.loc[st.session_state.stock_to_be_guessed, 'Headquarters Location']
             if st.session_state.counter > 0:
-                st.write("Wrong! Try again. Maybe you could try zooming in to last week's prices, if you stay updated with the markets daily.")
+                st.write(f'**Here is a hint:** The stock is in the _{industry}_ industry and its headquarters are located in _{headquarters}_. Try again!')
             if st.session_state.counter > 1 and st.session_state.counter <= 2:
                 st.write(f"**Still wrong?** Let's see if this helps. The ticker is: **{st.session_state.stock_to_be_guessed}**.")
 
