@@ -46,8 +46,8 @@ def beginner():
     def new_game():
         st.title('Fordle - The Wordle for Finance Nerds')
         st.subheader("**Which stock is being displayed here? It's listed in the S&P 500**")
-        industry = df.loc[st.session_state.stock_to_be_guessed, 'GICS Sector'] ###
-        headquarters = df.loc[st.session_state.stock_to_be_guessed, 'Headquarters Location']###
+        industry = df.loc[st.session_state.stock_to_be_guessed, 'GICS Sector'] 
+        headquarters = df.loc[st.session_state.stock_to_be_guessed, 'Headquarters Location']
         plot()
         st.write(f'*Here is a hint:* The stock is in the {industry} industry and its headquarters are located in {headquarters}. Try again!')
 
@@ -110,6 +110,7 @@ def beginner():
                 st.write("How about a Master in Finance at Nova SBE? It will certainly help to win this game!")
                 st.write("Check out the program: https://www.novasbe.unl.pt/en/programs/masters/finance/")
                 
+# initialize the advanced gaming function                
 def advanced():
     st.session_state.level = "advanced"
     
@@ -228,8 +229,7 @@ def advanced():
         new_game()
         display_input()
 
-        
-        
+  
     # display hints about stock to player. This loop is the essence of the game and decides on victories or losses. 
     def form_callback():
         save_guess()
@@ -301,7 +301,7 @@ def advanced():
                 st.write("**Just a few more wins. You got this!**")
             else:
                 st.write("How about a Master in Finance at Nova SBE? It will certainly help to win this game!")
-                st.write("Check out the program: https://www.novasbe.unl.pt/en/programs/masters/finance/")
+                st.write("Check out the program: [Finance @ Nova SBE](https://www.novasbe.unl.pt/en/programs/masters/finance/)")
 
                 
     # Creates an empty dataframe in which guesses can be displayed later
