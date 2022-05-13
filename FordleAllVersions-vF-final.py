@@ -1,3 +1,6 @@
+pip install streamlit
+pip install yfinance
+
 #importing necessary libraries
 import pandas as pd
 import yfinance as yf
