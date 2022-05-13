@@ -1,4 +1,5 @@
 #importing necessary libraries
+
 import pandas as pd
 import yfinance as yf
 import numpy as np
@@ -6,6 +7,7 @@ import altair as alt
 import streamlit as st
 import matplotlib.pyplot as plt
 import random
+import time 
 from datetime import date, timedelta
 from dateutil.relativedelta import relativedelta
 
@@ -36,18 +38,18 @@ def beginner():
     # Retrieves the data for the graph that needs to be guessed from the Yahoo Finance API
     def plot():
         data = yf.download(st.session_state.stock_to_be_guessed)
-        st.write('Note: To see the stock development in a more narrow time frame, you can zoom in within the graph and move the chart.')
+        st.write('**📝 Note**: To see the stock development in a more narrow time frame, you can zoom in within the graph and move the chart.')
         st.line_chart(data.Close) 
 
 
     # initialization of the game. Displays the graph to be guessed.
     def new_game():
         st.title('Fordle - The Wordle for Finance Nerds')
-        st.markdown('Which stock is being displayed here?')
-        industry = df.loc[st.session_state.stock_to_be_guessed, 'GICS Sector']
-        headquarters = df.loc[st.session_state.stock_to_be_guessed, 'Headquarters Location']
+        st.subheader("**Which stock is being displayed here? It's listed in the S&P 500**")
+        industry = df.loc[st.session_state.stock_to_be_guessed, 'GICS Sector'] ###
+        headquarters = df.loc[st.session_state.stock_to_be_guessed, 'Headquarters Location']###
         plot()
-        st.write(f'**Here is a hint:** The stock is in the _{industry}_ industry and its headquarters are located in _{headquarters}_. Try again!')
+        st.write(f'*Here is a hint:* The stock is in the {industry} industry and its headquarters are located in {headquarters}. Try again!')
 
     # display hints about stock to player. This loop is the essence of the game and decides on victories or losses. 
     def form_callback():
@@ -56,24 +58,22 @@ def beginner():
             st.session_state.counter = 0
             st.session_state.victories += 1
             new_game()
-            st.write('**You have guessed correctly!** \U0001F60D')
+            st.success('**You have guessed correctly!** \U0001F60D')
             st.write('Keep doing what you are doing. Next stock!')
+            st.balloons()
 
         elif st.session_state.counter >= 2:
+            old_stock_to_be_guessed = df.loc[st.session_state.stock_to_be_guessed, 'Security']
             random_choice()
             st.session_state.counter = 0
             st.session_state.loss += 1
             new_game()
-            st.write('**You have lost.** New try, with a new stock!')
+            st.error('**You have lost.** \u2639\uFE0F The correct answer was ' + old_stock_to_be_guessed + '. Above is already a new stock. Give it another try!')
 
         else:
             new_game()
-            st.write('**Wrong choice** \U0001F612')
+            st.error("**Wrong choice** \U0001F612")
             st.session_state.counter += 1
-            industry = df.loc[st.session_state.stock_to_be_guessed, 'GICS Sector']
-            headquarters = df.loc[st.session_state.stock_to_be_guessed, 'Headquarters Location']
-            if st.session_state.counter > 0:
-                st.write('Do you remember recent stock prices? Maybe you could zoom in and try again!')
             if st.session_state.counter > 1 and st.session_state.counter <= 2:
                 st.write(f"**Still wrong?** Let's see if this helps. The ticker is: **{st.session_state.stock_to_be_guessed}**.")
 
@@ -123,30 +123,29 @@ def advanced():
     def random_choice():
         stock_to_be_guessed=random.choice(df.index.values)
         st.session_state.stock_to_be_guessed = stock_to_be_guessed
-        st.session_state.stock_to_be_guessed ###
         return stock_to_be_guessed
 
     # Retrieves the data for the graph that needs to be guessed from the Yahoo Finance API
     def plot():
         data = yf.download(st.session_state.stock_to_be_guessed)
-        st.write('Note: To see the stock development in a more narrow time frame, you can zoom in within the graph and move the chart.')
+        st.write('**📝 Note**: To see the stock development in a more narrow time frame, you can zoom in within the graph and move the chart.')
         st.line_chart(data.Close) 
 
 
     # Initialization of the game. Displays the graph to be guessed and the input form
     def new_game():
         st.title('Fordle - The Wordle for Finance Nerds')
-        st.markdown('Which stock is being displayed here?')
+        st.subheader("**Which stock is being displayed here? It's listed in the S&P 500**")
         industry = df.loc[st.session_state.stock_to_be_guessed, 'GICS Sector']
         headquarters = df.loc[st.session_state.stock_to_be_guessed, 'Headquarters Location']
         plot()
-        display_input()
+        st.write(f'*Here is a hint:* The stock is in the {industry} industry and its headquarters are located in {headquarters}. Try again!')
         
         
     # Display of guess input fields. Triggers form_callback on submission
     def display_input():
         with st.form(key='my_form', clear_on_submit=True): 
-            col1, col2, col3, col4, col5 = st.columns(5) 
+            col1, col2, col3, col4 = st.columns(4) 
             with col1:
                 st.text_input(label="Letter 1: ", max_chars=1, key="guess1")
             with col2:
@@ -157,10 +156,9 @@ def advanced():
             with col4:
                 if len(st.session_state.stock_to_be_guessed) > 3:
                     st.text_input(label="Letter 4: ", max_chars=1, key="guess4") 
-            with col5:
-                ":bulb: Hint:"
-                "Press tab to navigate across cells"
+            ":bulb: Hint: Press tab to navigate across cells"
             submit_button = st.form_submit_button(label='Submit', on_click=form_callback)
+            
 
     # Saves the guessed letters as a word        
     def save_guess():
@@ -174,7 +172,8 @@ def advanced():
     # Updates the empty dataframe with the guesses of the first round
     def update_df_round1():
         st.session_state.guess_df.iloc[[st.session_state.counter],[0]] = st.session_state.guess1.upper()
-        st.session_state.guess_df.iloc[[st.session_state.counter],[1]] = st.session_state.guess2.upper()
+        if len(st.session_state.stock_to_be_guessed) > 1:
+            st.session_state.guess_df.iloc[[st.session_state.counter],[1]] = st.session_state.guess2.upper()
         if len(st.session_state.stock_to_be_guessed) > 2:
             st.session_state.guess_df.iloc[[st.session_state.counter],[2]] = st.session_state.guess3.upper()
         if len(st.session_state.stock_to_be_guessed) > 3:
@@ -221,41 +220,56 @@ def advanced():
         else: 
             color = None
         return 'background-color: %s' % color 
-        
 
+    
+    # defines function to combine random_choice, new_game and display_input to be activated by a button
+    def combination(): 
+        random_choice()
+        new_game()
+        display_input()
+
+        
+        
     # display hints about stock to player. This loop is the essence of the game and decides on victories or losses. 
     def form_callback():
         save_guess()
         # Case: entered word is correct
         if st.session_state.guess == st.session_state.stock_to_be_guessed:
-            random_choice()
-            st.session_state.counter = 0
-            st.session_state.victories += 1 ###add display of dataframe
             new_game()
-            st.write('**You have guessed correctly!** \U0001F60D')
-            st.write('Keep doing what you are doing. Next stock!') ###maybe first display text + button that lets you click for next stock
+            st.success('**You have guessed correctly!** \U0001F60D')
+            st.write('Keep doing what you are doing. Click to show the next stock!') 
+            if st.session_state.counter == 0:
+                update_df_round1()
+            if st.session_state.counter > 0:
+                update_df_round2()
+            st.session_state.counter = 0
+            st.session_state.victories += 1 
+            st.balloons()
+            new_game_button = st.button(label='Next stock!', on_click=combination)
         # Case: The maximum number of rounds have been exceeded
         elif st.session_state.counter >= 4:
-            random_choice()
+            new_game()
+            old_stock_to_be_guessed = st.session_state.stock_to_be_guessed
+            st.error('**You have lost.** \u2639\uFE0F The correct answer was ' + old_stock_to_be_guessed + '. Click to try the next stock!') 
+            update_df_round2()
             st.session_state.counter = 0
             st.session_state.loss += 1
-            new_game()
-            st.write('**You have lost.** New try, with a new stock!') #first display text+ actual solution + button that lets you click for next stock
+            new_game_button = st.button(label='Try again!', on_click=combination)
         # Case: round 1
         elif st.session_state.counter == 0:
             new_game()
-            st.write('**Wrong choice** \U0001F612')
+            display_input()
+            st.error('**Wrong choice** \U0001F612')
             update_df_round1()
             st.session_state.counter += 1
         # Case: round 2+
         else:
             new_game()
-            st.write('**Wrong choice** \U0001F612')
+            display_input()
+            st.error('**Wrong choice** \U0001F612')
             update_df_round2()
             st.session_state.counter += 1
-            industry = df.loc[st.session_state.stock_to_be_guessed, 'GICS Sector']
-            headquarters = df.loc[st.session_state.stock_to_be_guessed, 'Headquarters Location']
-            st.write(f'**Here is a hint:** The stock is in the _{industry}_ industry and its headquarters are located in _{headquarters}_. Try again!')
+            
 
 
     # initialize state variables needed within streamlit for the game to run and run the game methods 
@@ -268,6 +282,7 @@ def advanced():
         st.session_state.loss = 0
         random_choice()
         new_game()
+        display_input()
 
 
     #counts the number of times we lost or won a game 
@@ -278,7 +293,7 @@ def advanced():
     # side bar with information on number of games, wins and losses
     with st.sidebar:
         st.title("Score count")
-        st.write("You played ", st.session_state.victories + st.session_state.loss, " times ", f"and have won {st.session_state.victories} times and lost {st.session_state.loss} times.") ###clean up code
+        st.write("You played ", st.session_state.victories + st.session_state.loss, " times ", f"and have won {st.session_state.victories} times and lost {st.session_state.loss} times.") 
         if st.session_state.victories + st.session_state.loss > 0:
             if st.session_state.victories > st.session_state.loss:
                 st.write("**Amazing score, keep going!**")
@@ -291,10 +306,9 @@ def advanced():
                 
     # Creates an empty dataframe in which guesses can be displayed later
     tries = ['1st', '2nd', '3rd', '4th', '5th']  
-        ###new
+    
     if len(st.session_state.stock_to_be_guessed) == 1: 
         guess_df=pd.DataFrame({'Try': tries,'Letter 1':['','','','','']})
-        ####new
     if len(st.session_state.stock_to_be_guessed) == 2: 
         guess_df=pd.DataFrame({'Try': tries,'Letter 1':['','','','',''], 'Letter 2':['','','','','']})
     if len(st.session_state.stock_to_be_guessed) == 3: 
@@ -306,27 +320,36 @@ def advanced():
     st.session_state.guess_df = guess_df 
 
 
-    
-    ###to be deleted in the end       
-    for item in st.session_state.items():
-        item
-    
+
                     
 def landing_page():
+    col1, col2, col3 = st.columns(3)
+    with col1:
+        st.text(" ")
+    with col2:
+        st.image('./Logo.png')
+    with col3: 
+        st.text(" ")
     st.title('Fordle - The Wordle for Finance Nerds')
     with st.expander("See explanation of the game"):
-        st.write("""**How does the game work?** \n\n Each time you must guess a concrete company name which can be found in the drop-down menu. After one try you will get a hint regarding the industry and headquarter location and after three tries you will get the ticker hint.\n\n Hit the enter button to submit your answer.
+        st.write("""**HOW DOES FORDLE WORK**? \n\n The goal of the game is to guess the name of the stock displayed in the graph. \n\n *The principle is simple*: Each round you must guess the company name belonging to the stock listed in the S&P 500, which can be found in the drop-down menu. For this you have 3 tries. After each try you will get a new hint, such as the industry, ticker, and headquarter location. Hit the enter button to submit. \n\n If you choose the *“Expert”-Level*, you can only enter a 2-4-letter stock ticker. Similar, to guess the right word, after each try the game gives you a few hints and color clues. After each guess, the color of the tiles will change to show how close your guess was to the word and how many letters you got right. Guess the FORDLE in 3 or 5 tries!
                  """)
-        st.image("https://th.bing.com/th/id/R.7e47d1b5f1ec42e32ddaab0d85fb9951?rik=%2bckFqF3%2fX95xdQ&pid=ImgRaw&r=0")
+        st.image('./Explanation.png')
     st.markdown('Guess the **FORDLE** in **three** (Beginner) or **five** (Expert) tries.')
     st.header('Lets get started!')
+    st.markdown('**Choose your level:**')
 
 # button to choose which game player wants to pick
 if 'absolute_counter' not in st.session_state:
     st.session_state.absolute_counter = 0
     landing_page()
-    button = st.button("Beginner", on_click=beginner)
-    button = st.button("Advanced", on_click=advanced)
+    col1, col2 = st.columns(2)
+    with col1: 
+        st.markdown("🙌 For warming up, start here!")
+        button = st.button("Beginner", on_click=beginner)
+    with col2: 
+        st.markdown("👨‍💻 If you feel like you're an expert already!")
+        button = st.button("Advanced", on_click=advanced)
 elif st.session_state.absolute_counter == 0:
     st.session_state.absolute_counter += 1
 else:
@@ -335,3 +358,4 @@ else:
         beginner()
     else:
         advanced()
+
