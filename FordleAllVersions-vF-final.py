@@ -296,7 +296,7 @@ def advanced():
         guess_df=pd.DataFrame({'Try': tries,'Letter 1':['','','','','']})
         ####new
     if len(st.session_state.stock_to_be_guessed) == 2: 
-        guess_df=pd.DataFrame({'Try': tries,'Letter 1'f:['','','','',''], 'Letter 2':['','','','','']})
+        guess_df=pd.DataFrame({'Try': tries,'Letter 1':['','','','',''], 'Letter 2':['','','','','']})
     if len(st.session_state.stock_to_be_guessed) == 3: 
         guess_df=pd.DataFrame({'Try': tries,'Letter 1':['','','','',''], 'Letter 2':['','','','',''], 'Letter 3':['','','','','']})
     if len(st.session_state.stock_to_be_guessed) == 4: 
