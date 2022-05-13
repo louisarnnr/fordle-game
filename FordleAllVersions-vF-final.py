@@ -108,7 +108,7 @@ def beginner():
                 st.write("**Just a few more wins. You got this!**")
             else:
                 st.write("How about a Master in Finance at Nova SBE? It will certainly help to win this game!")
-                st.write("Check out the program: https://www.novasbe.unl.pt/en/programs/masters/finance/")
+                st.write("Check out the program: [Finance @ Nova SBE](https://www.novasbe.unl.pt/en/programs/masters/finance/)")
                 
 # initialize the advanced gaming function                
 def advanced():
