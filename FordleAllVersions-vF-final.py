@@ -109,7 +109,7 @@ def beginner():
             else:
                 st.write("How about a Master in Finance at Nova SBE? It will certainly help to win this game!")
                 st.write("Check out the program: [Finance @ Nova SBE](https://www.novasbe.unl.pt/en/programs/masters/finance/)")
-        st.write("[Mainpage - Choose a level](https://github.com/louisarnnr/fordle-game/edit/main/FordleAllVersions-vF-final.py)")
+        st.write("[Mainpage - Choose a level](https://share.streamlit.io/louisarnnr/fordle-game/main/FordleAllVersions-vF-final.py)")
                 
 # initialize the advanced gaming function                
 def advanced():
@@ -303,7 +303,7 @@ def advanced():
             else:
                 st.write("How about a Master in Finance at Nova SBE? It will certainly help to win this game!")
                 st.write("Check out the program: [Finance @ Nova SBE](https://www.novasbe.unl.pt/en/programs/masters/finance/)")
-        st.write("[Mainpage - Choose a level](https://github.com/louisarnnr/fordle-game/edit/main/FordleAllVersions-vF-final.py)")
+        st.write("[Mainpage - Choose a level](https://share.streamlit.io/louisarnnr/fordle-game/main/FordleAllVersions-vF-final.py)")
 
                 
     # Creates an empty dataframe in which guesses can be displayed later
