@@ -48,7 +48,7 @@ def beginner():
         industry = df.loc[st.session_state.stock_to_be_guessed, 'GICS Sector'] 
         headquarters = df.loc[st.session_state.stock_to_be_guessed, 'Headquarters Location']
         plot()
-        st.write(f'*Here is a hint:* The stock is in the {industry} industry and its headquarters are located in {headquarters}. Try again!')
+        st.write(f'*Here is a hint:* The stock is in the {industry} industry and its headquarters are located in {headquarters}.')
 
     # display hints about stock to player. This loop is the essence of the game and decides on victories or losses. 
     def form_callback():
@@ -140,7 +140,7 @@ def advanced():
         industry = df.loc[st.session_state.stock_to_be_guessed, 'GICS Sector']
         headquarters = df.loc[st.session_state.stock_to_be_guessed, 'Headquarters Location']
         plot()
-        st.write(f'*Here is a hint:* The stock is in the {industry} industry and its headquarters are located in {headquarters}. Try again!')
+        st.write(f'*Here is a hint:* The stock is in the {industry} industry and its headquarters are located in {headquarters}.')
         
         
     # display of guess input fields. Triggers form_callback on submission
